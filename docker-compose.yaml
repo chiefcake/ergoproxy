@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  ergoproxy:
+    image: ergoproxy:latest
+    container_name: ergoproxy
+    ports:
+      - 8080:8080
+    restart: on-failure
