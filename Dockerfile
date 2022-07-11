@@ -1,4 +1,4 @@
-FROM golang:1.18-buster as builder
+FROM --platform=$BUILDPLATFORM golang:1.18-buster as builder
 
 WORKDIR /go/src/github.com/chiefcake/ergoproxy
 
@@ -8,7 +8,9 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o ergoproxy main.go
+ARG TARGETOS TARGETARCH
+
+RUN CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o ergoproxy main.go
 
 FROM alpine:3.16.0
 
