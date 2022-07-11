@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "a985a455-7c2d-4fce-86c7-c6fc94cbdea9",
+		"name": "ErgoProxy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13432535"
+	},
+	"item": [
+		{
+			"name": "Proxying a POST request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"POST\",\n    \"url\": \"https://petstore3.swagger.io/api/v3/pet\",\n    \"headers\": {\n        \"Content-Type\": \"application/json\"\n    },\n    \"body\": \"{\\\"id\\\":10,\\\"name\\\":\\\"doggie\\\",\\\"category\\\":{\\\"id\\\":1,\\\"name\\\":\\\"Dogs\\\"},\\\"photoUrls\\\":[\\\"string\\\"],\\\"tags\\\":[{\\\"id\\\":0,\\\"name\\\":\\\"string\\\"}],\\\"status\\\":\\\"available\\\"}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/redirect",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"redirect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Proxying a GET request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"GET\",\n    \"url\": \"https://petstore3.swagger.io/api/v3/pet/10\",\n    \"headers\": {\n        \"Accept\": \"application/json\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/redirect",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"redirect"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Proxying a PUT request",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"method\": \"PUT\",\n    \"url\": \"https://petstore3.swagger.io/api/v3/pet\",\n    \"headers\": {\n        \"Content-Type\": \"application/json\"\n    },\n    \"body\": \"{\\\"id\\\":10,\\\"name\\\":\\\"doggie\\\",\\\"category\\\":{\\\"id\\\":1,\\\"name\\\":\\\"Dogs\\\"},\\\"photoUrls\\\":[\\\"string\\\"],\\\"tags\\\":[{\\\"id\\\":0,\\\"name\\\":\\\"string\\\"}],\\\"status\\\":\\\"available\\\"}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BASE_URL}}/api/v1/redirect",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"redirect"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": "http://localhost:8080",
+			"type": "string"
+		}
+	]
+}
