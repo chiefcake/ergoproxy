@@ -47,6 +47,6 @@ Just run the `make local-run` command. This command builds a Docker image with a
 
 ## How to test it? 🤔
 
-If you want to test it, you can find the Postman collection here.
+If you want to test it, you can find the Postman collection [here](./postman/).
 
 ## Thank you! 💟
