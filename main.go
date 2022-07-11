@@ -1,7 +1,13 @@
 package main
 
-import "fmt"
+import (
+	"context"
+
+	"github.com/chiefcake/ergoproxy/internal/gateway"
+)
 
 func main() {
-	fmt.Println("Hello World!")
+	ctx := context.Background()
+
+	gateway.Run(ctx)
 }

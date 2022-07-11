@@ -22,9 +22,13 @@ test:
 build:
 	go build -o ${BINARY_NAME} main.go
 
+.PHONY: generate
+generate:
+	buf generate
+
 .PHONY: build-docker-image
 build-docker-image:
-	docker build -t $(BINARY_NAME):latest .
+	docker build --platform=linux/amd64 -t $(BINARY_NAME):latest .
 
 .PHONY: local-run
 local-run: build-docker-image

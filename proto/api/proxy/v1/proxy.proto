@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package ergoproxy.api.proxy.v1;
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+
+option go_package = "github.com/chiefcake/ergoproxy/api/proxy/v1;proxyv1";
+
+service ProxyService {
+  rpc Redirect(RedirectRequest) returns (RedirectResponse) {
+    option (google.api.http) = {
+      post: "/api/v1/redirect"
+      body: "*"
+    };
+  }
+}
+
+message RedirectRequest {
+    string method = 1 [ (validate.rules).string = {in: ["POST", "GET", "PUT", "PATCH", "DELETE"]} ];
+    string url = 2 [ (validate.rules).string.uri = true ];
+    map<string, string> headers = 3;
+    string body = 4;
+}
+
+message RedirectResponse {
+    string id = 1;
+    int32 status = 2;
+    map<string, string> headers = 3;
+    int32 length = 4;
+    string body = 5;
+}
