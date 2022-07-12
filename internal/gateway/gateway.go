@@ -48,7 +48,7 @@ func RunWithConfig(ctx context.Context, cfg *config.Config) {
 	}
 }
 
-// Run the config values and starts the app gateway.
+// Run parses the config values and starts the app gateway.
 func Run(ctx context.Context) {
 	config, err := config.New()
 	if err != nil {
