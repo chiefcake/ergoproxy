@@ -10,7 +10,7 @@ const prefix = "ergoproxy"
 // Config contains the config values for the application.
 type Config struct {
 	ServerHost string `default:"" split_words:"true"`
-	ServerPort string `default:"localhost" split_words:"true"`
+	ServerPort string `default:"8080" split_words:"true"`
 }
 
 // New parses config from environment variables and returns an instance of config or an error.
