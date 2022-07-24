@@ -1,4 +1,4 @@
-package gateway
+package app
 
 import (
 	"context"
@@ -10,6 +10,7 @@ import (
 
 	"github.com/chiefcake/ergoproxy/internal/config"
 	"github.com/chiefcake/ergoproxy/internal/handler"
+	"github.com/chiefcake/ergoproxy/internal/model"
 	"github.com/chiefcake/ergoproxy/internal/server"
 	"github.com/chiefcake/ergoproxy/internal/service"
 	"github.com/chiefcake/ergoproxy/internal/storage"
@@ -19,7 +20,7 @@ const timeout = 3 * time.Second
 
 // Run starts the app gateway with provided config values.
 func RunWithConfig(ctx context.Context, cfg *config.Config) {
-	mapStorage := storage.NewMap[int64, any]()
+	mapStorage := storage.NewMap[*model.RedirectRequest, model.RedirectResponse]()
 	proxyService := service.NewProxy(mapStorage)
 	proxyHandler := handler.NewProxy(proxyService)
 
@@ -27,6 +28,8 @@ func RunWithConfig(ctx context.Context, cfg *config.Config) {
 	signal.Notify(shutdown, syscall.SIGINT, syscall.SIGTERM)
 
 	server := server.New(ctx, cfg, proxyHandler)
+
+	log.Printf("Server is running on [%s:%s]...\n", cfg.ServerHost, cfg.ServerPort)
 
 	go func() {
 		err := server.Serve()
@@ -40,6 +43,8 @@ func RunWithConfig(ctx context.Context, cfg *config.Config) {
 
 	ctx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
+
+	log.Println("Shutting down server...")
 
 	err := server.Shutdown(ctx)
 	if err != nil {

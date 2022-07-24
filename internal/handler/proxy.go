@@ -1,13 +1,12 @@
 package handler
 
 import (
-	"context"
+	"encoding/json"
+	"log"
+	"net/http"
 
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
-
-	proxyv1 "github.com/chiefcake/ergoproxy/api/proxy/v1"
 	"github.com/chiefcake/ergoproxy/internal/model"
+	"github.com/chiefcake/ergoproxy/internal/status"
 )
 
 // Proxy contains handler func for proxying HTTP requests.
@@ -22,28 +21,69 @@ func NewProxy(service ProxyService) *Proxy {
 	}
 }
 
-// Redirect validates request body of the request, proxies the request and returns a response or error.
-func (p Proxy) Redirect(ctx context.Context, request *proxyv1.RedirectRequest) (*proxyv1.RedirectResponse, error) {
-	err := request.Validate()
+// Redirect example
+// @Summary Redirect an HTTP request to third-party service
+// @ID redirect
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} model.RedirectResponse "OK"
+// @Failure 400 {object} status.ErrorResponse "Validation error"
+// @Failure 500 {object} status.ErrorResponse "Internal error"
+// @Router /api/v1/redirect [post]
+// Redirect validates request body of the request, proxies the request and returns a response.
+func (p Proxy) Redirect(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	var request model.RedirectRequest
+
+	decoder := json.NewDecoder(r.Body)
+	encoder := json.NewEncoder(w)
+
+	err := decoder.Decode(&request)
 	if err != nil {
-		return nil, status.Error(codes.Aborted, err.Error())
+		response := status.NewErrorResponse(http.StatusBadRequest, err.Error())
+
+		err = encoder.Encode(&response)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return
 	}
 
-	response, err := p.service.Redirect(ctx, model.RedirectRequest{
-		Method:  request.GetMethod(),
-		URL:     request.GetUrl(),
-		Headers: request.GetHeaders(),
-		Body:    request.GetBody(),
-	})
+	err = request.Validate()
 	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
+		response := status.NewErrorResponse(http.StatusBadRequest, err.Error())
+
+		err = encoder.Encode(&response)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return
 	}
 
-	return &proxyv1.RedirectResponse{
-		Id:      response.ID,
-		Status:  int32(response.Status),
-		Headers: response.Headers,
-		Length:  int32(response.Length),
-		Body:    response.Body,
-	}, nil
+	response, err := p.service.Redirect(r.Context(), request)
+	if err != nil {
+		response := status.NewErrorResponse(http.StatusInternalServerError, err.Error())
+
+		err = encoder.Encode(&response)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return
+	}
+
+	err = encoder.Encode(&response)
+	if err != nil {
+		response := status.NewErrorResponse(http.StatusInternalServerError, err.Error())
+
+		err = encoder.Encode(&response)
+		if err != nil {
+			log.Println(err)
+		}
+
+		return
+	}
 }

@@ -5,10 +5,9 @@ import (
 	"net"
 	"net/http"
 
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/gorilla/mux"
 	"github.com/pkg/errors"
 
-	proxyv1 "github.com/chiefcake/ergoproxy/api/proxy/v1"
 	"github.com/chiefcake/ergoproxy/internal/config"
 )
 
@@ -18,17 +17,20 @@ type Server struct {
 }
 
 // New configures routes and returns a server instance.
-func New(ctx context.Context, cfg *config.Config, handler proxyv1.ProxyServiceServer) *Server {
-	addr := net.JoinHostPort(cfg.ServerHost, cfg.ServerPort)
+func New(ctx context.Context, cfg *config.Config, handler ProxyHandler) *Server {
+	router := mux.NewRouter()
+	apiRouter := router.PathPrefix("/api").
+		Subrouter()
+	v1Router := apiRouter.PathPrefix("/v1").
+		Subrouter()
 
-	mux := runtime.NewServeMux()
-	//nolint:errcheck // because RegisterProxyServiceHandlerServer always returns an error as nil.
-	proxyv1.RegisterProxyServiceHandlerServer(ctx, mux, handler)
+	v1Router.HandleFunc("/redirect", handler.Redirect).
+		Methods(http.MethodPost)
 
 	return &Server{
 		server: &http.Server{
-			Addr:    addr,
-			Handler: mux,
+			Addr:    net.JoinHostPort(cfg.ServerHost, cfg.ServerPort),
+			Handler: router,
 		},
 	}
 }

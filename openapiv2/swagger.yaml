@@ -1,0 +1,55 @@
+definitions:
+  model.RedirectResponse:
+    properties:
+      body:
+        type: string
+      headers:
+        additionalProperties:
+          type: string
+        type: object
+      id:
+        type: string
+      length:
+        type: integer
+      status:
+        type: integer
+    type: object
+  status.ErrorResponse:
+    properties:
+      code:
+        type: integer
+      details:
+        items:
+          type: string
+        type: array
+      message:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  title: ErgoProxy API
+  version: "1.0"
+paths:
+  /api/v1/redirect:
+    post:
+      consumes:
+      - application/json
+      operationId: redirect
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.RedirectResponse'
+        "400":
+          description: Validation error
+          schema:
+            $ref: '#/definitions/status.ErrorResponse'
+        "500":
+          description: Internal error
+          schema:
+            $ref: '#/definitions/status.ErrorResponse'
+      summary: Redirect an HTTP request to third-party service
+swagger: "2.0"

@@ -22,9 +22,9 @@ test:
 build:
 	go build -o ${BINARY_NAME} main.go
 
-.PHONY: generate
-generate:
-	buf generate
+.PHONY: openapiv2
+openapiv2:
+	swag init --output=./openapiv2 --outputTypes=yaml
 
 .PHONY: build-docker-image
 build-docker-image:

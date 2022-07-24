@@ -35,11 +35,11 @@ Response body:
 
 ## What has been implemented? 🤔
 
-This project is implemented using grpc-gateway. The server accepts the request body, validates it, and returns the response body. The server only supports proxying for `POST`, `GET`, `PUT`, `PATCH` and `DELETE` methods, otherwise you will see a validation error.
+This project is implemented using REST. The server accepts the request body, validates it, and returns the response body. The server only supports proxying for `POST`, `GET`, `PUT`, `PATCH` and `DELETE` methods, otherwise you will see a validation error.
 
 ## What about documentation? 🤔
 
-You can find the OpenAPI specification [here](./openapiv2/api/proxy/v1/proxy.swagger.yaml) and the Protobuf3 definition [here](./proto/api/proxy/v1/proxy.proto).
+You can find the OpenAPI specification [here](./openapiv2/swagger.yaml).
 
 ## How to run it? 🤔
 
