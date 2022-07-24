@@ -5,7 +5,6 @@ import (
 	"io"
 	"net/http"
 	"strings"
-	"time"
 
 	nanoid "github.com/matoous/go-nanoid/v2"
 	"github.com/pkg/errors"
@@ -78,10 +77,7 @@ func (p Proxy) Redirect(ctx context.Context, request model.RedirectRequest) (mod
 	response.Length = httpResponse.ContentLength
 	response.Status = httpResponse.StatusCode
 
-	now := time.Now()
-
-	p.m.Insert(now.Unix(), request)
-	p.m.Insert(now.Unix(), response)
+	p.m.Insert(&request, response)
 
 	return response, nil
 }
