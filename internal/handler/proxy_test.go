@@ -74,7 +74,7 @@ func TestProxyRedirect(t *testing.T) {
 				fn: func(service *mock.MockProxyService, request request, response response) {},
 			},
 			response: response{
-				status: http.StatusOK,
+				status: http.StatusBadRequest,
 				body: status.ErrorResponse{
 					Code:    http.StatusBadRequest,
 					Message: model.ErrInvalidURL.Error(),

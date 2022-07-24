@@ -41,6 +41,7 @@ func (p Proxy) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	err := decoder.Decode(&request)
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		response := status.NewErrorResponse(http.StatusBadRequest, err.Error())
 
 		err = encoder.Encode(&response)
@@ -53,6 +54,7 @@ func (p Proxy) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	err = request.Validate()
 	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
 		response := status.NewErrorResponse(http.StatusBadRequest, err.Error())
 
 		err = encoder.Encode(&response)
@@ -65,6 +67,7 @@ func (p Proxy) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	response, err := p.service.Redirect(r.Context(), request)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		response := status.NewErrorResponse(http.StatusInternalServerError, err.Error())
 
 		err = encoder.Encode(&response)
@@ -77,6 +80,7 @@ func (p Proxy) Redirect(w http.ResponseWriter, r *http.Request) {
 
 	err = encoder.Encode(&response)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
 		response := status.NewErrorResponse(http.StatusInternalServerError, err.Error())
 
 		err = encoder.Encode(&response)
