@@ -20,3 +20,12 @@ func (m Map[K, V]) Insert(key K, value V) {
 
 	m.m[key] = value
 }
+
+func (m Map[K, V]) Find(key K) (V, bool) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	value, ok := m.m[key]
+
+	return value, ok
+}
