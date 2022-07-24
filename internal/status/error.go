@@ -6,6 +6,7 @@ type ErrorResponse struct {
 	Details []string `json:"details"`
 }
 
+// NewProxy is a constructor for ErrorResponse.
 func NewErrorResponse(code int, message string, details ...string) *ErrorResponse {
 	return &ErrorResponse{
 		Code:    code,
