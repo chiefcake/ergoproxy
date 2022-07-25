@@ -92,10 +92,13 @@ func TestProxyRedirect(t *testing.T) {
 	handler := NewProxy(service)
 
 	router := mux.NewRouter()
-	apiRouter := router.PathPrefix("/api").Subrouter()
-	v1Router := apiRouter.PathPrefix("/v1").Subrouter()
+	apiRouter := router.PathPrefix("/api").
+		Subrouter()
+	v1Router := apiRouter.PathPrefix("/v1").
+		Subrouter()
 
-	v1Router.HandleFunc("/redirect", handler.Redirect)
+	v1Router.HandleFunc("/redirect", handler.Redirect).
+		Methods(http.MethodPost)
 
 	server := httptest.NewServer(router)
 	defer server.Close()
@@ -106,7 +109,7 @@ func TestProxyRedirect(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			test.behavior.fn(service, test.request, test.response)
 
-			expect.GET("/api/v1/redirect").
+			expect.POST("/api/v1/redirect").
 				WithJSON(test.request.body).
 				Expect().
 				Status(test.response.status).
